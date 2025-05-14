@@ -1,0 +1,73 @@
+/* Fondo y texto general */
+.dark-mode {
+  background-color: #121212 !important;
+  color: #ffffff !important;
+}
+
+/* Formularios */
+.dark-mode input,
+.dark-mode select,
+.dark-mode textarea,
+.dark-mode .form-control {
+  background-color: #333 !important;
+  color: #ffffff !important;
+  border-color: #555 !important;
+}
+
+/* Tablas */
+.dark-mode table,
+.dark-mode .table {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+.dark-mode th,
+.dark-mode td {
+  background-color: #333 !important;
+  color: white !important;
+}
+
+/* Botones */
+.dark-mode .btn {
+  border-color: #444 !important;
+}
+
+.dark-mode .btn-primary {
+  background-color: #1a73e8 !important;
+  border-color: #1a73e8 !important;
+  color: #fff !important;
+}
+
+.dark-mode .btn-danger {
+  background-color: #d32f2f !important;
+  border-color: #d32f2f !important;
+}
+
+.dark-mode .btn-warning {
+  background-color: #f57c00 !important;
+  border-color: #f57c00 !important;
+}
+
+.dark-mode .btn-close {
+  filter: invert(1);
+}
+
+/* Alertas */
+.dark-mode .alert {
+  background-color: #222 !important;
+  border-color: #444 !important;
+  color: #eee !important;
+}
+
+/* Bordes y tarjetas */
+.dark-mode .card,
+.dark-mode .border,
+.dark-mode .modal-content {
+  background-color: #222 !important;
+  color: white !important;
+}
+
+/* Iconos si es necesario */
+.dark-mode i {
+  color: white !important;
+}
