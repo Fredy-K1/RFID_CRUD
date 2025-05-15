@@ -14,6 +14,13 @@ $id = intval($data['id']);
 $name = $conn->real_escape_string($data['name']);
 $email = $conn->real_escape_string($data['email']);
 
+// Validación sencilla del email
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+  http_response_code(400);
+  echo json_encode(['error' => 'Email no válido']);
+  exit;
+}
+
 $sql = "UPDATE admins SET name='$name', email='$email'";
 
 // Si se proporciona una nueva contraseña
@@ -30,3 +37,6 @@ if ($conn->query($sql) === TRUE) {
   http_response_code(500);
   echo json_encode(['error' => 'Error al actualizar: ' . $conn->error]);
 }
+
+$conn->close();
+?>

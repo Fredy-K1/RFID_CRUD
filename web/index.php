@@ -1,3 +1,7 @@
+<?php
+require_once 'auth_admin/sessions.php';
+checkAdminSession();
+?>
 <!DOCTYPE html>
 <html lang="es">
 
@@ -8,11 +12,21 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/css/darkmode.css" rel="stylesheet">
+  <link href="assets/css/animations.css" rel="stylesheet"> 
 </head>
-
 <body class="bg-light text-dark">
 
   <div class="container py-5">
+
+    <!-- Mensaje de bienvenida -->
+    <?php if (isset($_SESSION['admin_name'])): ?>
+      <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-4" role="alert" id="welcomeAlert">
+        <i class="bi bi-hand-thumbs-up me-2"></i>
+        ¡Bienvenido, <strong><?php echo htmlspecialchars($_SESSION['admin_name']); ?></strong>! Has iniciado sesión como administrador.
+        <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+      </div>
+    <?php endif; ?>
+
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2><i class="bi bi-person-badge"></i> Gestión de Usuarios RFID</h2>
       <div class="d-flex gap-2">
@@ -22,6 +36,9 @@
         <button class="btn btn-outline-dark" onclick="toggleDarkMode()">
           <i class="bi bi-moon-fill"></i> Modo Oscuro/Claro
         </button>
+        <a href="auth_admin/logout.php" class="btn btn-outline-danger">
+          <i class="bi bi-box-arrow-right"></i> Cerrar Sesión
+        </a>
       </div>
     </div>
 
@@ -118,13 +135,11 @@
                   <th>#</th>
                   <th>Nombre</th>
                   <th>Email</th>
-                  <th>Contraseña</th> <!-- Nueva columna para la contraseña -->
+                  <th>Contraseña</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody id="adminTableBody">
-                <!-- Aquí se insertarán administradores dinámicamente -->
-              </tbody>
+              <tbody id="adminTableBody"></tbody>
             </table>
           </div>
         </div>
@@ -168,11 +183,23 @@
     </div>
   </div>
 
-  <!-- Scripts -->
+    <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="assets/js/main.js?v=1.0.1"></script>
   <script src="assets/js/admin.js?v=1.0.1"></script>
 
-</body>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const alertBox = document.querySelector('#welcomeAlert');
+      if (alertBox) {
+        setTimeout(() => {
+          alertBox.classList.add('fade-out');
+          setTimeout(() => alertBox.remove(), 1000);
+        }, 5000); // Desaparece tras 5 segundos
+      }
+    });
+  </script>
 
-</html>
+  </body>
+
+  </html>
