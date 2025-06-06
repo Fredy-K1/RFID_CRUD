@@ -24,6 +24,7 @@ if ($result && $result->num_rows === 1) {
   if (password_verify($password, $admin['password'])) {
     $_SESSION['admin_id'] = $admin['id'];
     $_SESSION['admin_name'] = $admin['name'];
+    $_SESSION['welcome_shown'] = false; 
     echo json_encode(['success' => true]);
     exit;
   }

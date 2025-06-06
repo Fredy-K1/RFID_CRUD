@@ -2,16 +2,20 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include <WebServer.h>
+#include <HTTPClient.h>
 
-#define RST_PIN 22   // Cambia si usas otros pines
+#define RST_PIN 22
 #define SS_PIN 5
 MFRC522 rfid(SS_PIN, RST_PIN);
 
+// Configuración WiFi
 const char* ssid = "UbeeD18F-2.4G";
 const char* password = "MaFer0808";
 
+// Dirección del servidor
+const char* serverUrl = "http://TU_IP/api/log_access.php";  // ⚠️ Reemplaza TU_IP
+
 String lastUUID = "";
-bool isUpdated = false; // Bandera que indica si el UUID fue actualizado
 WebServer server(80);
 
 void setup() {
@@ -26,16 +30,11 @@ void setup() {
   }
   Serial.println("Conectado a WiFi. IP: " + WiFi.localIP().toString());
 
-  // Habilitar CORS
+  // Endpoint para pruebas opcionales
   server.on("/uuid", HTTP_GET, []() {
-    if (isUpdated) {
-      server.sendHeader("Access-Control-Allow-Origin", "*");
-      server.sendHeader("Access-Control-Allow-Methods", "GET");
-      server.send(200, "text/plain", lastUUID);
-      isUpdated = false; // Después de enviar el UUID, reseteamos la bandera
-    } else {
-      server.send(200, "text/plain", ""); // Si no hay actualización, enviamos vacío
-    }
+    server.sendHeader("Access-Control-Allow-Origin", "*");
+    server.sendHeader("Access-Control-Allow-Methods", "GET");
+    server.send(200, "text/plain", lastUUID);
   });
 
   server.begin();
@@ -52,12 +51,31 @@ void loop() {
     uuid += String(rfid.uid.uidByte[i], HEX);
   }
 
-  // Solo actualizamos si el UUID es diferente al último guardado
+  uuid.toUpperCase(); // Convierte el UUID a mayúsculas para consistencia
+
+  // Solo registrar si es distinto al anterior
   if (uuid != lastUUID) {
     lastUUID = uuid;
-    isUpdated = true;  // Se indica que el UUID fue actualizado
-    Serial.println("Nuevo UUID detectado: " + uuid);
+    Serial.println("UUID detectado: " + uuid);
+
+    if (WiFi.status() == WL_CONNECTED) {
+      HTTPClient http;
+      http.begin(serverUrl);
+      http.addHeader("Content-Type", "application/x-www-form-urlencoded");
+
+      String postData = "uuid=" + uuid;
+
+      int httpResponseCode = http.POST(postData);
+      String response = http.getString();
+
+      Serial.println("Código HTTP: " + String(httpResponseCode));
+      Serial.println("Respuesta: " + response);
+
+      http.end();
+    } else {
+      Serial.println("WiFi desconectado");
+    }
   }
 
-  delay(2000);  // Evita lecturas duplicadas rápidas
+  delay(2000); // Evita lecturas duplicadas rápidas
 }

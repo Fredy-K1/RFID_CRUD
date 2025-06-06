@@ -19,13 +19,15 @@ checkAdminSession();
   <div class="container py-5">
 
     <!-- Mensaje de bienvenida -->
-    <?php if (isset($_SESSION['admin_name'])): ?>
+    <?php if (isset($_SESSION['admin_name']) && empty($_SESSION['welcome_shown'])): ?>
       <div class="alert alert-success alert-dismissible fade show d-flex align-items-center mb-4" role="alert" id="welcomeAlert">
         <i class="bi bi-hand-thumbs-up me-2"></i>
         ¡Bienvenido, <strong><?php echo htmlspecialchars($_SESSION['admin_name']); ?></strong>! Has iniciado sesión como administrador.
         <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert" aria-label="Cerrar"></button>
       </div>
+      <?php $_SESSION['welcome_shown'] = true; ?>
     <?php endif; ?>
+
 
     <div class="d-flex justify-content-between align-items-center mb-4">
       <h2><i class="bi bi-person-badge"></i> Gestión de Usuarios RFID</h2>
@@ -33,6 +35,9 @@ checkAdminSession();
         <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#adminModal">
           <i class="bi bi-person-gear"></i> Agregar Administrador
         </button>
+        <a href="checkup_user/logs.php" class="btn btn-outline-info">
+          <i class="bi bi-clock-history"></i> Registro de Accesos
+        </a>
         <button class="btn btn-outline-dark" onclick="toggleDarkMode()">
           <i class="bi bi-moon-fill"></i> Modo Oscuro/Claro
         </button>
@@ -41,6 +46,7 @@ checkAdminSession();
         </a>
       </div>
     </div>
+
 
     <!-- Alertas -->
     <div id="alertContainer"></div>
