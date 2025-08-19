@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   const uuidInput = document.getElementById('uuidInput');
-  const ESP32_IP = "http://192.168.137.102";
+  const ESP32_IP = "http://192.168.0.9";
   let pollInterval;
   let currentUsers = [];
 
